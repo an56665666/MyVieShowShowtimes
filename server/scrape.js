@@ -221,24 +221,32 @@ async function fetchShowtimesHtml(cinemaCode) {
   const ctx = await browser.newContext(CONTEXT_OPTIONS);
   try {
     const page = await ctx.newPage();
+
+    const ajaxPromise = page.waitForResponse(
+      (r) => r.url().includes("GetShowTimes") && r.request().method() === "POST",
+      { timeout: 60000 }
+    );
+
     await page.goto(SHOWTIMES_URL, { waitUntil: "domcontentloaded", timeout: 90000 });
     await page.waitForTimeout(2000);
+
     if (/Access Denied/i.test(await page.title())) {
       const err = new Error("Upstream blocked request (Access Denied)");
       err.code = "UPSTREAM_BLOCKED";
       throw err;
     }
-    const resp = await page.request.post(POST_URL, {
-      form: { CinemaCode: cinemaCode },
-      timeout: 60000,
-    });
-    if (!resp.ok()) {
-      const err = new Error(`GetShowTimes HTTP ${resp.status()}`);
+
+    await page.selectOption("#CinemaNameTWInfoF", cinemaCode);
+
+    const ajaxResp = await ajaxPromise;
+    if (!ajaxResp.ok()) {
+      const err = new Error(`GetShowTimes HTTP ${ajaxResp.status()}`);
       err.code = "HTTP_ERROR";
-      err.status = resp.status();
+      err.status = ajaxResp.status();
       throw err;
     }
-    return resp.text();
+    const body = await ajaxResp.text();
+    return body;
   } finally {
     await ctx.close();
   }

@@ -10,7 +10,7 @@ const {
   SHOWTIMES_URL,
 } = require("../server/scrape");
 
-const CONCURRENCY = 3;
+const CONCURRENCY = process.env.CI ? 2 : 3;
 const OUT_DIR = path.join(__dirname, "..", "dist");
 
 async function runBatch(items, concurrency, fn) {
