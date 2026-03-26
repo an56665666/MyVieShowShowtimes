@@ -16,12 +16,7 @@
 
 ### 系統顯示文字（User-facing text）
 
-所有系統內實際顯示給使用者的文字一律使用英文，包含但不限於：
-
-- UI 文字（Buttons、Labels、Placeholders）
-- 錯誤訊息（Error Messages）
-- 提示訊息（System Messages / Notifications）
-- 對外 Logs（使用者可見）
+所有系統內實際顯示給使用者的文字一律使用中文，包含但不限於：
 
 ### AI Agent 規範
 

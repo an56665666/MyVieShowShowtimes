@@ -72,12 +72,12 @@ async function main() {
 
 function buildHtml(css, json, generatedAt) {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f0e8">
-<title>Vieshow Showtimes</title>
+<title>威秀場次查詢</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -87,39 +87,39 @@ function buildHtml(css, json, generatedAt) {
 
 <header class="top">
   <div class="top-inner">
-    <h1>Vieshow Showtimes</h1>
-    <p class="tagline">Offline snapshot · generated ${escHtml(generatedAt)}</p>
+    <h1>威秀場次查詢</h1>
+    <p class="tagline">資料更新時間：${escHtml(generatedAt)}</p>
   </div>
 </header>
 
 <main class="wrap">
   <section class="panel controls">
     <label class="field">
-      <span class="label">Cinema</span>
-      <select id="cinema" aria-label="Cinema">
-        <option value="">Choose a cinema</option>
+      <span class="label">影城</span>
+      <select id="cinema" aria-label="影城">
+        <option value="">請選擇影城</option>
       </select>
     </label>
     <label class="field">
-      <span class="label">Date</span>
-      <select id="dateFilter" aria-label="Filter by date">
-        <option value="">All dates</option>
+      <span class="label">日期</span>
+      <select id="dateFilter" aria-label="日期">
+        <option value="">所有日期</option>
       </select>
     </label>
     <label class="field grow">
-      <span class="label">Movie</span>
-      <select id="movieFilter" aria-label="Filter by movie">
-        <option value="">All movies</option>
+      <span class="label">電影</span>
+      <select id="movieFilter" aria-label="電影">
+        <option value="">所有電影</option>
       </select>
     </label>
   </section>
 
-  <p id="status" class="status" role="status">Select a cinema to view showtimes.</p>
+  <p id="status" class="status" role="status">請選擇影城以查詢場次。</p>
   <section id="results" class="results" aria-live="polite"></section>
 </main>
 
 <footer class="foot">
-  <p>Source: <a href="https://www.vscinemas.com.tw/ShowTimes/" target="_blank" rel="noopener noreferrer">VIESHOW CINEMAS</a>. Offline snapshot for personal use.</p>
+  <p>資料來源：<a href="https://www.vscinemas.com.tw/ShowTimes/" target="_blank" rel="noopener noreferrer">威秀影城</a>，僅供個人查詢使用。</p>
 </footer>
 
 <script>
@@ -186,21 +186,21 @@ function filterByDate(movies,dateTW){
 
 function populateDates(movies){
   const prev=dateEl.value,dates=collectDates(movies);
-  dateEl.innerHTML='<option value="">All dates</option>';
+  dateEl.innerHTML='<option value="">\\u6240\\u6709\\u65e5\\u671f</option>';
   for(const d of dates){const o=document.createElement("option");o.value=d.tw;o.textContent=d.tw+"  "+d.en;dateEl.appendChild(o);}
   if(prev&&[...dateEl.options].some(o=>o.value===prev))dateEl.value=prev;
 }
 
 function populateMovies(movies){
   const prev=movieEl.value;
-  movieEl.innerHTML='<option value="">All movies</option>';
+  movieEl.innerHTML='<option value="">\\u6240\\u6709\\u96fb\\u5f71</option>';
   for(const m of movies){const o=document.createElement("option");o.value=m.titleTW;o.textContent=m.titleTW+"  ("+countSessions(m)+")";movieEl.appendChild(o);}
   if(prev&&[...movieEl.options].some(o=>o.value===prev))movieEl.value=prev;
 }
 
 function chipHtml(v){
   const tw=(v.formatTW||"").trim(),en=(v.formatEN||"").trim();
-  if(!tw&&!en)return'<span class="chip chip-muted">Standard</span>';
+  if(!tw&&!en)return'<span class="chip chip-muted">\\u4e00\\u822c</span>';
   let h="";if(tw)h+='<span class="chip chip-tw">'+esc(tw)+"</span>";
   if(en)h+='<span class="chip chip-en">'+esc(en)+"</span>";return h;
 }
@@ -210,12 +210,12 @@ function renderDays(days){
 }
 
 function render(movies){
-  if(!movies.length){resultsEl.innerHTML='<div class="empty">No showtimes found.</div>';return;}
+  if(!movies.length){resultsEl.innerHTML='<div class="empty">\\u67e5\\u7121\\u5834\\u6b21\\u3002</div>';return;}
   const parts=[];
   for(const m of movies){
     const s=countSessions(m);
     const vh=(m.variants||[]).map(v=>'<section class="variant"><div class="variant-chips" role="group" aria-label="Format">'+chipHtml(v)+'</div><div class="variant-schedule">'+renderDays(v.days||[])+"</div></section>").join("");
-    parts.push('<article class="card"><div class="card-head"><h2 class="card-title">'+esc(m.titleTW)+'</h2><span class="session-badge">'+s+' sessions</span></div><p class="sub">'+esc(m.titleEN)+'</p><div class="variants">'+vh+"</div></article>");
+    parts.push('<article class="card"><div class="card-head"><h2 class="card-title">'+esc(m.titleTW)+'</h2><span class="session-badge">'+s+' \\u5834</span></div><p class="sub">'+esc(m.titleEN)+'</p><div class="variants">'+vh+"</div></article>");
   }
   resultsEl.innerHTML=parts.join("");
 }
@@ -227,12 +227,12 @@ function apply(){
   populateMovies(sd?movies:allMovies);
   render(movies);
   const f=[];if(sd)f.push(sd);if(sm)f.push(sm);
-  statusEl.textContent=movies.length+" film(s)"+(f.length?" \\u00b7 "+f.join(" / "):"");
+  statusEl.textContent=movies.length+" \\u90e8\\u96fb\\u5f71"+(f.length?" \\u00b7 "+f.join(" / "):"");
 }
 
 cinemaEl.addEventListener("change",()=>{
   const code=cinemaEl.value;
-  if(!code){allMovies=[];populateDates([]);populateMovies([]);resultsEl.innerHTML="";statusEl.textContent="Select a cinema.";return;}
+  if(!code){allMovies=[];populateDates([]);populateMovies([]);resultsEl.innerHTML="";statusEl.textContent="\\u8acb\\u9078\\u64c7\\u5f71\\u57ce\\u3002";return;}
   allMovies=sortPop(DATA.showtimes[code]||[]);
   populateDates(allMovies);populateMovies(allMovies);apply();
 });

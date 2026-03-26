@@ -15,7 +15,7 @@ function setStatus(text, isError = false) {
 }
 
 function showLoader(msg) {
-  loaderEl.querySelector(".loader-text").textContent = msg || "Loading…";
+  loaderEl.querySelector(".loader-text").textContent = msg || "載入中…";
   loaderEl.hidden = false;
   statusEl.textContent = "";
   resultsEl.innerHTML = "";
@@ -74,12 +74,12 @@ function filterByDate(movies, dateTW) {
 }
 
 async function loadCinemas() {
-  showLoader("Loading cinemas…");
+  showLoader("載入影城列表…");
   try {
     const res = await fetch("/api/cinemas");
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || data.detail || "Failed to load cinemas");
-    cinemaEl.innerHTML = '<option value="">Choose a cinema</option>';
+    cinemaEl.innerHTML = '<option value="">請選擇影城</option>';
     for (const c of data.cinemas) {
       const opt = document.createElement("option");
       opt.value = c.code;
@@ -87,11 +87,11 @@ async function loadCinemas() {
       cinemaEl.appendChild(opt);
     }
     hideLoader();
-    setStatus("Select a cinema to load showtimes.");
+    setStatus("請選擇影城以查詢場次。");
   } catch (e) {
     hideLoader();
     setStatus(e.message || String(e), true);
-    cinemaEl.innerHTML = '<option value="">Failed to load</option>';
+    cinemaEl.innerHTML = '<option value="">載入失敗</option>';
   }
 }
 
@@ -115,7 +115,7 @@ function chipHtml(v) {
   const tw = (v.formatTW || "").trim();
   const en = (v.formatEN || "").trim();
   if (!tw && !en) {
-    return `<span class="chip chip-muted">Standard</span>`;
+    return `<span class="chip chip-muted">一般</span>`;
   }
   const parts = [];
   if (tw) parts.push(`<span class="chip chip-tw">${esc(tw)}</span>`);
@@ -140,7 +140,7 @@ function sortByPopularity(movies) {
 function populateDateDropdown(movies) {
   const prev = dateEl.value;
   const dates = collectDates(movies);
-  dateEl.innerHTML = '<option value="">All dates</option>';
+  dateEl.innerHTML = '<option value="">所有日期</option>';
   for (const d of dates) {
     const opt = document.createElement("option");
     opt.value = d.tw;
@@ -154,7 +154,7 @@ function populateDateDropdown(movies) {
 
 function populateMovieDropdown(movies) {
   const prev = movieEl.value;
-  movieEl.innerHTML = '<option value="">All movies</option>';
+  movieEl.innerHTML = '<option value="">所有電影</option>';
   for (const m of movies) {
     const sessions = countSessions(m);
     const opt = document.createElement("option");
@@ -170,7 +170,7 @@ function populateMovieDropdown(movies) {
 function renderMovies(movies, meta = {}) {
   const { fetchedAt, cached } = meta;
   if (!movies.length) {
-    resultsEl.innerHTML = `<div class="empty">No showtimes found.</div>`;
+    resultsEl.innerHTML = `<div class="empty">查無場次。</div>`;
     setStatus(fetchedAt ? `Updated ${fetchedAt}${cached ? " (cached)" : ""}` : "");
     return;
   }
@@ -195,7 +195,7 @@ function renderMovies(movies, meta = {}) {
       <article class="card">
         <div class="card-head">
           <h2 class="card-title">${esc(m.titleTW)}</h2>
-          <span class="session-badge">${sessions} sessions</span>
+          <span class="session-badge">${sessions} 場</span>
         </div>
         <p class="sub">${esc(m.titleEN)}</p>
         <div class="variants">${variantsHtml}</div>
@@ -208,7 +208,7 @@ function renderMovies(movies, meta = {}) {
   if (dateEl.value) filters.push(dateEl.value);
   if (movieEl.value) filters.push(movieEl.value);
   setStatus(
-    `${movies.length} film(s), ${variantTotal} format(s)` +
+    `${movies.length} 部電影，${variantTotal} 種格式` +
       (fetchedAt ? ` · ${fetchedAt}` : "") +
       (cached ? " (cached)" : "") +
       (filters.length ? ` · ${filters.join(" / ")}` : "")
@@ -241,7 +241,7 @@ async function loadShowtimes(options = {}) {
   const { bypassCache = false } = options;
   const code = cinemaEl.value;
   if (!code) {
-    setStatus("Choose a cinema first.");
+    setStatus("請先選擇影城。");
     resultsEl.innerHTML = "";
     allMovies = [];
     populateDateDropdown([]);
@@ -249,7 +249,7 @@ async function loadShowtimes(options = {}) {
     return;
   }
   refreshEl.disabled = true;
-  showLoader("Loading showtimes…");
+  showLoader("載入場次中…");
   try {
     const qs = new URLSearchParams({ cinema: code });
     if (bypassCache) qs.set("nocache", "1");
