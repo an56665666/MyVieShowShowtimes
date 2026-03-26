@@ -231,7 +231,6 @@ function apply(){
 }
 
 cinemaEl.addEventListener("change",()=>{
-  dateEl.value="";movieEl.value="";
   const code=cinemaEl.value;
   if(!code){allMovies=[];populateDates([]);populateMovies([]);resultsEl.innerHTML="";statusEl.textContent="Select a cinema.";return;}
   allMovies=sortPop(DATA.showtimes[code]||[]);

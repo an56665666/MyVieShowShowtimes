@@ -274,8 +274,6 @@ async function loadShowtimes(options = {}) {
 }
 
 cinemaEl.addEventListener("change", () => {
-  dateEl.value = "";
-  movieEl.value = "";
   loadShowtimes();
 });
 
