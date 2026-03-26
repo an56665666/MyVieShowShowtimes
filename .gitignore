@@ -1,0 +1,4 @@
+node_modules/
+dist/
+scripts/sample-getshowtimes.html
+.env

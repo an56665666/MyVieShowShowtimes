@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f0e8" />
+    <title>My Vieshow Showtimes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="top-inner">
+        <h1>My Vieshow Showtimes</h1>
+        <p class="tagline">Filter by cinema and movie title. Data is scraped from the official timetable page.</p>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="panel controls">
+        <label class="field">
+          <span class="label">Cinema</span>
+          <select id="cinema" aria-label="Cinema">
+            <option value="">Loading…</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label">Date</span>
+          <select id="dateFilter" aria-label="Filter by date">
+            <option value="">All dates</option>
+          </select>
+        </label>
+        <label class="field grow">
+          <span class="label">Movie</span>
+          <select id="movieFilter" aria-label="Filter by movie">
+            <option value="">All movies</option>
+          </select>
+        </label>
+        <button type="button" id="refresh" class="btn primary">Refresh</button>
+      </section>
+
+      <div id="loader" class="loader" hidden>
+        <div class="spinner" aria-label="Loading"></div>
+        <span class="loader-text">Loading showtimes…</span>
+      </div>
+
+      <p id="status" class="status" role="status"></p>
+
+      <section id="results" class="results" aria-live="polite"></section>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Source:
+        <a href="https://www.vscinemas.com.tw/ShowTimes/" rel="noopener noreferrer" target="_blank"
+          >VIESHOW CINEMAS Show Times</a
+        >. For personal use only.
+      </p>
+    </footer>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
