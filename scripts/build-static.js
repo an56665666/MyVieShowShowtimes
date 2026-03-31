@@ -11,6 +11,12 @@ const {
 } = require("../server/scrape");
 
 const CONCURRENCY = process.env.CI ? 2 : 3;
+
+function formatTaiwanTime(date) {
+  const pad = (n) => String(n).padStart(2, "0");
+  const tw = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  return `${tw.getUTCFullYear()}-${pad(tw.getUTCMonth() + 1)}-${pad(tw.getUTCDate())} ${pad(tw.getUTCHours())}:${pad(tw.getUTCMinutes())}:${pad(tw.getUTCSeconds())}`
+}
 const OUT_DIR = path.join(__dirname, "..", "dist");
 
 async function runBatch(items, concurrency, fn) {
@@ -54,7 +60,7 @@ async function main() {
   await browser.close();
 
   const payload = {
-    generatedAt: new Date().toISOString(),
+    generatedAt: formatTaiwanTime(new Date()),
     cinemas,
     showtimes: allData,
   };

@@ -2,9 +2,8 @@ name: Build & Deploy Showtimes
 
 on:
   schedule:
-    # 台灣時間 12:30 (UTC 04:30) 和 20:30 (UTC 12:30)
-    - cron: "30 4 * * *"
-    - cron: "30 12 * * *"
+    # 每週三、週五 台灣時間 12:30 (UTC 04:30)
+    - cron: "30 4 * * 3,5"
   workflow_dispatch:
 
 permissions:
